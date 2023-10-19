@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'note.dart';
 import 'urls.dart';
+import 'create.dart';
+import 'update.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,6 +71,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _addNote() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+          builder: (context) => CreatePage(),
+        ))
+        .then((_) => _retrieveNotes()); // Refresh notes after adding
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,15 +96,18 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => _deleteNote(notes[index].id),
             ),
             onTap: () {
-              // Handle onTap here
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                    builder: (context) => UpdatePage(note: notes[index]),
+                  ))
+                  .then(
+                      (_) => _retrieveNotes()); // Refresh notes after updating
             },
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Handle adding a new note here
-        },
+        onPressed: _addNote,
         tooltip: 'Add Note',
         child: const Icon(Icons.add),
       ),
